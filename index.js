@@ -7,9 +7,28 @@ const ascii = require('ascii-table');
 const table = new ascii().setHeading('Command', 'Load Status');
 require('dotenv').config();
 
+client.dev = ["552103947662524416"]
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
+client.db = undefined;
+client.dbchannel = undefined;
+client.dbguild = undefined
+/*
+    DataBase
+*/
+const MongoDB = require('mongodb');
+const DBClient = new MongoDB.MongoClient(process.env.DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+DBClient.connect().then(() => {
+    client.db = DBClient.db('bot').collection('main');
+    client.dbchannel = DBClient.db('bot').collection('channels');
+    client.dbguild = DBClient.db('bot').collection('guild');
+    console.log(`[System] MongoDB Connected`)
+});
 
 fs.readdir('./commands/', (err, list) => {
     for (let file of list) {
