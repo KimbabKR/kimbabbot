@@ -5,6 +5,7 @@ const config = require("./config.json");
 const prefix = config.prefix
 const ascii = require('ascii-table');
 const table = new ascii().setHeading('Command', 'Load Status');
+const ktoken = process.env.KTOKEN
 require('dotenv').config();
 
 client.dev = ["552103947662524416"]
@@ -12,8 +13,7 @@ client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
 client.db = undefined;
-client.dbchannel = undefined;
-client.dbguild = undefined
+client.dbstock = undefined
 /*
     DataBase
 */
@@ -25,11 +25,14 @@ const DBClient = new MongoDB.MongoClient(process.env.DB, {
 
 DBClient.connect().then(() => {
     client.db = DBClient.db('bot').collection('main');
-    client.dbchannel = DBClient.db('bot').collection('channels');
-    client.dbguild = DBClient.db('bot').collection('guild');
+    client.dbstock = DBClient.db('bot').collection('stock');
     console.log(`[System] MongoDB Connected`)
 });
 
+
+/*
+    Handler
+*/
 fs.readdir('./commands/', (err, list) => {
     for (let file of list) {
         try {
@@ -52,13 +55,48 @@ fs.readdir('./commands/', (err, list) => {
     console.log(table.toString());
 });
 
-const { KoreanbotsClient } = require("koreanbots")
-const kclient = new KoreanbotsClient({
-    koreanbotsToken: process.env.KTOKEN,
-    koreanbotsOptions: {
-        interval: 100000
+client.on('message', async message => {
+    if (message.author.bot) return;
+    if (!message.content.startsWith(prefix)) return;
+    let args = message.content.substr(prefix.length).trim().split(' ');
+    if (client.commands.get(args[0])) {
+        client.commands.get(args[0]).run(client, message, args);
+    } else if (client.aliases.get(args[0])) {
+        client.commands.get(client.aliases.get(args[0])).run(client, message, args);
+    } else {
+        let s = 0;
+        let sname = undefined;
+        let typed = args[0];
+        let valids = [];
+        for (let x of client.commands.array()) {
+            for (let y of x.aliases) {
+                valids.push(y);
+            }
+            valids.push(x.name);
+        }
+        for (let curr of valids) {
+            let cnt = 0;
+            let i = 0;
+            for (let curlet of curr.split('')) {
+                if (curlet[i] && typed.split('')[i] && curlet[i] == typed.split('')[i]) {
+                    cnt++;
+                }
+                i++;
+            }
+            if (cnt > s) {
+                s = cnt;
+                sname = curr;
+            }
+        }
     }
-})
+
+});
+
+
+
+/*
+    Im Ready!
+*/
 client.on('ready', () => {
     console.log(`[System] Logged in as ${client.user.username}`);
     setInterval(() => {
@@ -129,6 +167,7 @@ client.on('ready', () => {
         }
     }, 10000);
     /*setInterval(() => {
+      const axios = require('axios').default;
         axios.post(`https://api.koreanbots.dev/bots/servers`, {
             servers: client.guilds.cache.size
         }, {
@@ -138,46 +177,25 @@ client.on('ready', () => {
             }
         });
     }, 200000);*/
+    
 });
 
+/*
+    주식
+*/
+//const stock = require('./assets/stock')
+//stock(client);
+/*
+    Dokdo
+*/
+const Dokdo = require('dokdo')
 
+const DokdoHandler = new Dokdo(client, { aliases: ['dokdo', 'dok'], prefix: '.' }) // Using Bot Application ownerID as default for owner option.
 
 client.on('message', async message => {
-    if (message.author.bot) return;
-    if (!message.content.startsWith(prefix)) return;
-    let args = message.content.substr(prefix.length).trim().split(' ');
-    if (client.commands.get(args[0])) {
-        client.commands.get(args[0]).run(client, message, args);
-    } else if (client.aliases.get(args[0])) {
-        client.commands.get(client.aliases.get(args[0])).run(client, message, args);
-    } else {
-        let s = 0;
-        let sname = undefined;
-        let typed = args[0];
-        let valids = [];
-        for (let x of client.commands.array()) {
-            for (let y of x.aliases) {
-                valids.push(y);
-            }
-            valids.push(x.name);
-        }
-        for (let curr of valids) {
-            let cnt = 0;
-            let i = 0;
-            for (let curlet of curr.split('')) {
-                if (curlet[i] && typed.split('')[i] && curlet[i] == typed.split('')[i]) {
-                    cnt++;
-                }
-                i++;
-            }
-            if (cnt > s) {
-                s = cnt;
-                sname = curr;
-            }
-        }
-    }
+  DokdoHandler.run(message) // try !dokdo
+})
 
-});
 
 const keepAlive = require('./web')
 keepAlive();

@@ -1,7 +1,12 @@
 const { Client, Message, MessageEmbed } = require("discord.js");
+
+const commandsTitle = [
+    "도움말ㅣ기본 명령어",
+    "도움말ㅣ돈",
+    "도움말ㅣ개발자 전용 명령어"
+]
 const commandsList = [
     [
-
         {
             name: `.도움말`,
             value: `당신이 보고 있는 이 페이지입니다!`,
@@ -10,11 +15,27 @@ const commandsList = [
             name: `.핑`,
             value: `봇 지연시간을 측정합니다.`,
         },
-    ],
-    [
         {
             name: `.이유`,
             value: `밴이 되었을때, 이유를 확인합니다.`,
+        },
+        {
+            name: `.리더보드 (숫자)`,
+            value: `돈 순위를 보여줍니다.`,
+        },
+        {
+            name: `.초대링크`,
+            value: `김밥봇 관련된 링크들을 알려드립니다.`,
+        },
+    ],
+    [
+        {
+            name: `.가입`,
+            value: `김밥봇의 첫 걸음이죠.`,
+        },
+        {
+            name: `.탈퇴`,
+            value: `김밥봇 서비스에서 털퇴합니다.`,
         },
         {
             name: `.출첵`,
@@ -32,10 +53,7 @@ const commandsList = [
             name: `.상점`,
             value: `보유중인 돈을 사용해 아이템을 살수 있습니다.`,
         },
-        {
-            name: `.리더보드 (숫자)`,
-            value: `돈 순위를 보여줍니다.`,
-        },
+        
     ],
     [
         {
@@ -55,8 +73,12 @@ const commandsList = [
             value: `김밥봇 이용을 할수 없게 만듭니다. **개발자 전용 명령어 입니다.`,
         },
         {
-            name: `.인벤토리제거 [아이템ID], .removeItem`,
+            name: `.인벤토리제거 [아이템ID]`,
             value: `지급한 아이템을 인벤토리에서 제거합니다. **개발자 전용 명령어 입니다.`,
+        },
+        {
+             name: `.dok`,
+             value: `독도 모듈을 사용해 Eval, Shell 을 접속이 가능합니다`,
         },
         
     ],
@@ -141,6 +163,9 @@ module.exports = {
                 color: "#FFFFF",
                 timestamp: new Date()
             }
+            let commandsDescription = [""]
+            embedJSON.title = commandsTitle[page - 1];
+
             embedJSON.fields = commandsList[page - 1];
         
             let pageMessage = await message.channel.send({embed: embedJSON});
@@ -152,18 +177,21 @@ module.exports = {
             const forward = pageMessage.createReactionCollector(forwardReactFilter, {tiem: 60000});
             const backward = pageMessage.createReactionCollector(backwardReactFilter, {tiem: 60000});
 
-            forward.on('collect', async r => {
-                r.users.remove(message.author.id);
+            forward.on('collect', async (r, err) => {
+                //r.users.remove(message.author.id);
                 if (page == pageMax) return;
                 page += 1;
+                embedJSON.description = commandsDescription[page - 1]
+                embedJSON.title = commandsTitle[page - 1];
                 embedJSON.fields = commandsList[page - 1];
                 pageMessage.edit({embed: embedJSON});
             });
 
-            backward.on('collect', async r => {
-                r.users.remove(message.author.id);
+            backward.on('collect', async (r, e) => {
+                //r.users.remove(message.author.id);
                 if (page == 1) return;
                 page -= 1;
+                embedJSON.title = commandsTitle[page - 1];
                 embedJSON.fields = commandsList[page - 1];
                 pageMessage.edit({embed: embedJSON});
             });

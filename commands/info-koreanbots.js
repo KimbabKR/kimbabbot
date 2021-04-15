@@ -1,6 +1,6 @@
 module.exports = {
     name: 'K-BOTS',
-    aliases: ['hellothisisverification'],
+    aliases: ['hellothisisverification', '개발자'],
     description: 'Hello This is Verification',
     usage: '.hellothisisverification',
     run: async (client, message, args, config) => {

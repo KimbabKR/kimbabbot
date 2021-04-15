@@ -1,0 +1,3 @@
+onBoot="bash main.sh"
+run="node ."
+language="nodejs"
