@@ -8,7 +8,7 @@ const table = new ascii().setHeading('Command', 'Load Status');
 const ktoken = process.env.KTOKEN
 require('dotenv').config();
 
-client.dev = ["552103947662524416"]
+client.dev = ["552103947662524416", "393674169243402240"]
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
@@ -190,7 +190,7 @@ client.on('ready', () => {
 */
 const Dokdo = require('dokdo')
 
-const DokdoHandler = new Dokdo(client, { aliases: ['dokdo', 'dok'], prefix: '.' }) // Using Bot Application ownerID as default for owner option.
+const DokdoHandler = new Dokdo(client, { aliases: ['dokdo', 'dok'], prefix: '.', owners : client.dev }) // Using Bot Application ownerID as default for owner option.
 
 client.on('message', async message => {
   DokdoHandler.run(message) // try !dokdo

@@ -15,7 +15,13 @@ module.exports = {
         let count = Number(args[2]);
         let toUserDB = await client.db.findOne({_id: userID});
         let meUserDB = await client.db.findOne({_id: message.author.id});
-        
+        if (userID == message.author.id) return message.reply(new MessageEmbed()
+                .setColor("YELLOW")
+                .setDescription(`버그 [#1](https://github.com/KimbabKR/kimbabbot/issues/1) 로 인해 자신에게 돈을 보내지 못하게 되었습니다.`)
+                .setTimestamp()
+                .setFooter(`${message.author.tag}\u200b`, message.author.displayAvatarURL({
+                    dynamic: true,
+                })));
         try {
             if (toUserDB && meUserDB) {
                 if (toUserDB.ban || meUserDB.ban) {
