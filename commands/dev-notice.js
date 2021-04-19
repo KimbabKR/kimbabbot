@@ -1,6 +1,4 @@
 const Discord = require('discord.js');
-const {MessageEmbed} = require('discord.js')
-const {discord} = require('discord.js')
 
 module.exports = {
     name: '공지',
@@ -102,7 +100,7 @@ module.exports = {
                     .setTimestamp()
                 p.edit(ymbed);
             } else {
-                const cancled = new Discord.MessageEmbed()
+                const canceled = new Discord.MessageEmbed()
                     .setTitle('공지 전송이 취소되었어요.')
                     .setColor(0xff0000)
                     .setThumbnail(client.user.displayAvatarURL({
@@ -113,7 +111,7 @@ module.exports = {
                         dynamic: true
                     }))
                     .setTimestamp()
-                p.edit(cancled);
+                p.edit(canceled);
             }
             p.reactions.removeAll();
         });     
