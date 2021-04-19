@@ -25,7 +25,7 @@ module.exports = {
                 max: 1
             });
             collector.on('end', async collected => {
-                if (collected.first().emoji.name == '✅') {
+                if (collected.first().emoji.name == '✅') {ㅁㄴㅇㄹ
                     await client.db.deleteOne({_id: message.author.id});
                     embed.setTitle('탈퇴 완료!')
                     .setDescription('')
