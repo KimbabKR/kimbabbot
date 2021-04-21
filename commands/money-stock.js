@@ -15,6 +15,8 @@ module.exports = {
                 .addField('Int 전자', `${(await client.dbstock.findOne({_id: "int"})).money}`)
                 .addField('Kcoin 은행', `${(await client.dbstock.findOne({_id: "kcoin"})).money}`)
                 .addField('국밥 식품', `${(await client.dbstock.findOne({_id: "bab"})).money}`)
+								.addField('Control Delta', `${(await client.dbstock.findOne({_id: "cd"})).money}`)
+								.addField('크라운 제과', `${(await client.dbstock.findOne({_id: "kraun"})).money}`)
                 .setTimestamp()
                 .setFooter('확인한 시간')
       message.channel.send(embed)

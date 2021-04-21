@@ -8,24 +8,7 @@ function stock(client){
 /*
       DB 저장
 */
-    const bab =  client.dbstock.findOne({_id : "bab"});
-    const kcoin =  client.dbstock.findOne({_id : "bab"});
-    const int =  client.dbstock.findOne({_id : "bab"});
-    const js =  client.dbstock.findOne({_id : "js"});
     
-    
-    function float2int (value) {
-      return value | 0;
-    }
-    setInterval(() => {
-      client.dbstock.findOneAndUpdate({_id: "bab"}, {$set: { money: (float2int(Math.random() * ((min) * (-2)) + (min)) + stock) }})
-
-      client.dbstock.findOneAndUpdate({_id: "kcoin"}, {$set: { money: (float2int(Math.random() * ((min) * (-2)) + (min)) + stock) }})
-
-      client.dbstock.findOneAndUpdate({_id: "int"}, {$set: { money: (float2int(Math.random() * ((min) * (-2)) + (min)) + stock) }})
-
-      client.dbstock.findOneAndUpdate({_id: "js"}, {$set: { money: (float2int(Math.random() * ((min) * (-2)) + (min)) + stock) }})
-    }, 500000);
 /* 
       DB 불러오기
 */

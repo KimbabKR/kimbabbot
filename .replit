@@ -1,3 +1,4 @@
 onBoot="bash main.sh"
+erun="npm test"
 run="node ."
 language="nodejs"
